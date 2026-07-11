@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Roue PNG</title>
+
+<style>
+    body {
+        text-align: center;
+        font-family: Segoe UI, Arial;
+        background: #fff;
+        color: #000;
+        margin-top: 40px;
+    }
+
+    /* TITRE EN SEGOE UI EXTRABOLD */
+    h1 {
+        font-family: "Segoe UI", Arial;
+        font-weight: 900;
+        font-size: 48px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    /* Conteneur centré pour la roue */
+    #wheelWrapper {
+        width: 1040px;
+        height: 1040px;
+        margin: 160px auto 0 auto;
+        position: relative;
+    }
+
+    /* Roue PNG agrandie ×2 */
+    #wheel {
+        width: 100%;
+        height: 100%;
+        background: url("wheel.png") no-repeat center center;
+        background-size: contain;
+        transition: transform 3s ease-out;
+    }
+
+    /* TRIANGLE INVERSÉ GRIS – VERSION MODIFIÉE PAR TOI */
+    #pointer {
+        position: absolute;
+        top: 200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 60px solid transparent;
+        border-right: 60px solid transparent;
+        border-top: 120px solid #777;
+        z-index: 10;
+    }
+
+    /* Plein écran résultat — fond blanc */
+    #resultBox {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    /* ⭐ IMAGES & GIFS EN PLEIN ÉCRAN */
+    #resultBox img {
+        width: 100vw;
+        height: 100vh;
+        object-fit: contain;
+    }
+
+    #resultBox audio {
+        margin-top: 20px;
+    }
+
+    /* BOUTON FERMER — IDENTIQUE AU BOUTON LANCER */
+    #closeBtn {
+        margin-top: 20px;
+        width: 150px;
+        height: 150px;
+        background: red;
+        color: white;
+        font-size: 26px;
+        font-weight: bold;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(255,0,0,0.5);
+        transition: transform 0.2s;
+        position: absolute;
+        bottom: 40px;
+    }
+
+    #closeBtn:hover {
+        transform: scale(1.08);
+    }
+
+    /* BOUTON LANCER : rond, rouge, texte blanc, gras, plus grand */
+    #spinBtn {
+        margin-top: 40px;
+        width: 180px;
+        height: 180px;
+        background: red;
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(255,0,0,0.5);
+        transition: transform 0.2s;
+    }
+
+    #spinBtn:hover {
+        transform: scale(1.08);
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Tourne la roue pour trouver des indices</h1>
+
+<!-- ✔ Le cercle gris a été supprimé -->
+<div id="pointer"></div>
+
+<div id="wheelWrapper">
+    <div id="wheel"></div>
+</div>
+
+<button id="spinBtn">Lancer</button>
+
+<div id="resultBox">
+    <button id="closeBtn">Fermer</button>
+</div>
+
+<script>
+    var wheel = document.getElementById("wheel");
+    var btn = document.getElementById("spinBtn");
+    var box = document.getElementById("resultBox");
+    var closeBtn = document.getElementById("closeBtn");
+    var pointer = document.getElementById("pointer");
+
+    var images = ["images/image1.png", "images/image2.png", "images/image3.png", "images/image4.png", "images/image5.png", "images/image6.png"];
+    var gifs   = ["gifs/gif1.gif", "gifs/gif2.gif", "gifs/gif3.gif", "gifs/gif4.gif", "gifs/gif5.gif", "gifs/gif6.gif"];
+    var sons   = ["sons/son1.mp3", "sons/son2.mp3", "sons/son3.mp3", "sons/son4.mp3", "sons/son5.mp3", "sons/son6.mp3"];
+
+    btn.onclick = function () {
+
+        box.style.display = "none";
+        box.innerHTML = "<button id='closeBtn'>Fermer</button>";
+        closeBtn = document.getElementById("closeBtn");
+
+        btn.disabled = true;
+
+        var r = 360 * 5 + Math.floor(Math.random() * 360);
+        wheel.style.transform = "rotate(" + r + "deg)";
+
+        setTimeout(function () {
+
+            btn.disabled = false;
+
+            /* ⭐ Le triangle disparaît */
+            pointer.style.display = "none";
+
+            var types = ["image", "gif", "son"];
+            var type = types[Math.floor(Math.random() * 3)];
+
+            if (type === "image") {
+                var src = images[Math.floor(Math.random() * images.length)];
+                box.innerHTML = "<img src='" + src + "'><button id='closeBtn'>Fermer</button>";
+            }
+
+            if (type === "gif") {
+                var src = gifs[Math.floor(Math.random() * gifs.length)];
+                box.innerHTML = "<img src='" + src + "'><button id='closeBtn'>Fermer</button>";
+            }
+
+            if (type === "son") {
+                var src = sons[Math.floor(Math.random() * sons.length)];
+                box.innerHTML =
+                    "<audio controls autoplay><source src='" + src + "' type='audio/mpeg'></audio>" +
+                    "<button id='closeBtn'>Fermer</button>";
+            }
+
+            box.style.display = "flex";
+
+            closeBtn = document.getElementById("closeBtn");
+
+            closeBtn.onclick = function () {
+                box.style.display = "none";
+
+                /* ⭐ Le triangle réapparaît */
+                pointer.style.display = "block";
+            };
+
+        }, 3000);
+    };
+</script>
+
+</body>
+</html>
